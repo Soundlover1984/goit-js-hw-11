@@ -35,28 +35,57 @@ function onFormSubmit(event) {
     event.preventDefault();
     searchSection.style.backgroundColor = 'hsla(248, 39%, 39%, 0.7)';
     searchQuery = event.currentTarget.elements.searchQuery.value;
+
+
+    try {
+        fetchData(searchQuery, pageStart).then(result => {
+            const data = result.data;
+            const total = data.totalHits;
+            const imageArr = data.hits;
+            const imageLeft = total - imageArr.length * pageStart;
+        })
+
+        if (searchQuery === "") {
+            Notiflix.Notify.warning(
+                'Please enter key words for search.'
+            );
+        }
+        if (imageArr.length > 0) {
+            Notiflix.Notify.success(
+                `Hooray! We found ${total} images.`
+            );
+        }
+    
+        if (imageArr.length === 0) {
+            Notiflix.Notify.failure(
+                'Sorry, there are no images matching your search query. Please try again.'
+            );
+            renderGallery.innerHTML = '';
+            loadMoreBtn.classList.add('is-hidden');
+            return;
+        }
+        if (imageLeft > 0) {
+            loadMoreBtn.classList.remove('is-hidden');
+        }
+
+        renderGallery.innerHTML = '';
+    
+        const markUp = createMarkUp(imageArr);
+        renderGallery.insertAdjacentHTML('beforeend', markUp);
+        pageStart += 1;
+        lightbox.refresh();
+    }
+    catch {
+        error => {
+            console.log(error);
+        };
+    }
+
+    formEl.reset();
 }
 
-try {
-    fetchData(searchQuery, pageStart).then(result => {
-        const data = result.data;
-        const total = data.totalHits;
-        const picsArr = data.hits;
-        const picsLeft = total - picsArr.length * pageStart;
-    })
 
-    if (searchQuery === "") {
-        Notiflix.Notify.warning(
-        'Please enter key words for search.'
-        );
-    }
-    if (picsArr.length > 0) {
-        Notiflix.Notify.success(
-          `Hooray! We found ${total} images.`
-        );
-      }
 
-} 
 
 
 
