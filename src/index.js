@@ -19,7 +19,7 @@ formEl.addEventListener('submit', onFormSubmit);
 loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
 inputData.addEventListener('focus', onInputChange);
 
-// зміна кольору під час фокусу на інпуті 
+// зміна прозорості кольору під час фокусу на інпуті 
 
 function onInputChange() {
   searchSection.style.backgroundColor = "rgba(154, 205, 50, 1)";
