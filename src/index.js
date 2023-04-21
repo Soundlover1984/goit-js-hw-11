@@ -5,32 +5,44 @@ import { createMarkUp } from "./js/markUp";
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+// змінні
+
 const searchSection = document.querySelector('.search');
 const formEl = document.querySelector('#search-form');
 const inputData = document.querySelector('.search__input');
 const renderGallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
+// підключення слухачів 
+
 formEl.addEventListener('submit', onFormSubmit);
 loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
 inputData.addEventListener('focus', onInputChange);
+
+// зміна кольору під час фокусу на інпуті 
 
 function onInputChange() {
   searchSection.style.backgroundColor = "rgba(154, 205, 50, 1)";
 }
 
+// лайтбокс
 const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
   captionsData: 'alt',
 });
 
+// стартові змінні
+
 let searchQuery = null;
 let pageStart = 1;
+
+
+// перший сабміт
 
 function onFormSubmit(event) {
   event.preventDefault();
   searchSection.style.backgroundColor = "rgba(154, 205, 50, 0.5)";
-  searchQuery = event.currentTarget.elements.searchQuery.value;
+  searchQuery = event.currentTarget.elements.searchQuery.value.trim();
 
   try {
     fetchData(searchQuery, pageStart).then(result => {
@@ -83,6 +95,8 @@ function onFormSubmit(event) {
  formEl.reset();
 }
 
+// пагінація
+
 function onLoadMoreBtnClick() {
   try {
     fetchData(searchQuery, pageStart).then(result => {
@@ -90,7 +104,6 @@ function onLoadMoreBtnClick() {
       const total = data.totalHits;
       const picsArr = data.hits;
       const picsLeft = total - 40 * pageStart;
-
       const markUp = createMarkUp(picsArr);
       renderGallery.insertAdjacentHTML('beforeend', markUp);
 
@@ -111,3 +124,17 @@ function onLoadMoreBtnClick() {
     };
   }
 }
+
+// смусс скролл
+
+function smoothScroll() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+}
+
