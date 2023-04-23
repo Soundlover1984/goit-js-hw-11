@@ -103,7 +103,7 @@ function onLoadMoreBtnClick() {
       const data = result.data;
       const total = data.totalHits;
       const picsArr = data.hits;
-      const picsLeft = total - 40 * pageStart;
+      const picsLeft = total - picsArr.length * pageStart;
       const markUp = createMarkUp(picsArr);
       renderGallery.insertAdjacentHTML('beforeend', markUp);
 
