@@ -37,7 +37,7 @@ let searchQuery = null;
 let pageStart = 1;
 
 
-// перший сабміт
+// сабміт
 
 function onFormSubmit(event) {
   event.preventDefault();
